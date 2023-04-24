@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  
+    <!-- Logging to Console will make the logs available to cloudwatch. -->
+    <appender name="Console"
+        class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+        	<!-- 
+        		PATTERN EXAMPLE: 
+        		2023-02-03 08:28:56.955 INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms 
+        	-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+  
+    <!-- Logging at INFO level -->
+    <root level="info">
+        <appender-ref ref="Console" />
+    </root>
+ 
+</configuration>

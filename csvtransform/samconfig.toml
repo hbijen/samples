@@ -1,0 +1,10 @@
+version = 0.1
+[dev.deploy.parameters]
+stack_name = "sam-dev-csvtransform"
+resolve_s3 = true
+s3_prefix = "sam-dev-csvtransform"
+region = "ap-south-1"
+profile = "main"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+image_repositories = ["ParseCsvFunction=226990651527.dkr.ecr.ap-south-1.amazonaws.com/samdevcsvtransform89bbd6a5/parsecsvfunction769fb450repo"]
