@@ -6,6 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.time.Duration;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -23,21 +24,23 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
-import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
-import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
+import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
+import com.example.authserver.model.RegistrationClient;
+import com.example.authserver.repository.ClientRepository;
+import com.example.authserver.repository.JpaRegisteredClientRepository;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
@@ -49,24 +52,64 @@ public class AuthorizationServerConfig {
     @Autowired
 	private Environment env;
 
-    @Bean
-    public RegisteredClientRepository registeredClientRepository() {
-        RegisteredClient registeredClient1 = RegisteredClient.withId(UUID.randomUUID().toString())
-          .clientId("client1")
-          .clientSecret("{noop}secret1")
-          .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-          .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-          .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-          .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-          .redirectUri("http://127.0.0.1:8080/login/oauth2/code/product-client-oidc")
-          .redirectUri("http://127.0.0.1:8080/authorized")
-          .scope(OidcScopes.OPENID)
-          //.scope(OidcScopes.PROFILE)
-          .scope("product.read")
-          //.clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
-          .build();
-        return new InMemoryRegisteredClientRepository(registeredClient1);
-    }
+    // @Autowired
+    // JpaRegisteredClientRepository jpaRegisteredClientRepository;
+
+    // @Bean
+    // public RegisteredClientRepository registeredClientRepository() {
+    //     RegisteredClient registeredClient1 = RegisteredClient.withId(UUID.randomUUID().toString())
+    //       .clientId("client1")
+    //       .clientSecret("{noop}secret1")
+    //       .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+    //       .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+    //       .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+    //       .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+    //       .redirectUri("http://127.0.0.1:8080/login/oauth2/code/product-client-oidc")
+    //       .redirectUri("http://127.0.0.1:8080/authorized")
+    //       .scope(OidcScopes.OPENID)
+    //       //.scope(OidcScopes.PROFILE)
+    //       .scope("product.read")
+    //       //.clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
+    //       .build();
+    //     return new JpaRegisteredClientRepository(registeredClient1);
+    // }
+
+	@Bean
+    public RegisteredClientRepository registeredClientRepository(ClientRepository clientRepository) {
+
+		JpaRegisteredClientRepository registeredClientRepository = new JpaRegisteredClientRepository(clientRepository);
+		List<RegistrationClient> clients = RegistrationClient.fromEnv(env);
+		for (RegistrationClient client: clients) {
+			RegisteredClient registeredClient = registeredClientRepository.findByClientId(client.getClientId());
+			if (registeredClient == null) {
+				RegisteredClient.Builder clientBuilder = RegisteredClient.withId(UUID.randomUUID().toString())
+						.clientId(client.getClientId())
+						.clientSecret(client.getClientSecret())
+						.clientName(client.getClientName())
+						.tokenSettings(tokenSettings())
+						.clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build());
+
+				client.getClientAuthenticationMethods().forEach((d) -> clientBuilder.clientAuthenticationMethod(new ClientAuthenticationMethod(d)));
+				client.getAuthorizationGrantTypes().forEach((d) -> clientBuilder.authorizationGrantType(new AuthorizationGrantType(d)));
+				client.getRedirectUris().forEach((d) -> clientBuilder.redirectUri(d));
+				client.getScopes().forEach((d) -> clientBuilder.scope(d));
+
+				registeredClientRepository.save(clientBuilder.build());
+			}
+		}
+		return registeredClientRepository;
+	}    
+	
+	// @Bean
+	// public OAuth2AuthorizationService authorizationService(AuthorizationRepository authorizationRepository, RegisteredClientRepository registeredClientRepository) {
+	// 	return new JpaOAuth2AuthorizationService(authorizationRepository, registeredClientRepository);
+	// }
+	
+	// @Bean
+	// public OAuth2AuthorizationConsentService authorizationConsentService(AuthorizationConsentRepository authorizationConsentRepository, RegisteredClientRepository registeredClientRepository) {
+	// 	return new JpaOAuth2AuthorizationConsentService(authorizationConsentRepository, registeredClientRepository);
+	// }
+
 
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -160,5 +203,7 @@ public class AuthorizationServerConfig {
 				.refreshTokenTimeToLive(Duration.ofDays(refreshTokenTTL))
 				.build();
 	}
+
+    
   
 }

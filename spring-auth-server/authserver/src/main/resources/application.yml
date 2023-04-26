@@ -8,7 +8,6 @@ logging:
       springframework:
         security: DEBUG
 
-
 app:
   auth:
     loginUrl: http://localhost:9000/auth/login
@@ -16,6 +15,17 @@ app:
     token:
       accessTokenTTL: 10 # value in days
       refreshTokenTTL: 10 # value in days
+  client: # add all the clients that needs to access this authorization server 
+    keys: client01
+    registration:
+      client01:
+        client-id: client1
+        client-secret: "{noop}secret1"
+        client-name: example client
+        client-authentication-methods: client_secret_basic 
+        authorization-grant-types: authorization_code,refresh_token,client_credentials
+        redirect-uris: http://127.0.0.1:8080/login/oauth2/code/product-client-oidc,http://127.0.0.1:8080/authorized
+        scopes: openid,product.read
 
 spring:
   jpa:
