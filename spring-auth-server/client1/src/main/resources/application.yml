@@ -1,0 +1,34 @@
+
+server:
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
+
+spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          spring:
+            issuer-uri: http://localhost:9000      
+        registration:
+          product-client-oidc:
+            provider: spring
+            client-id: client1
+            client-secret: secret1
+            authorization-grant-type: authorization_code
+            redirect-uri: "http://127.0.0.1:8080/login/oauth2/code/{registrationId}"
+            scope: openid
+            client-name: product-client-oidc
+          product-client-id:
+            provider: spring
+            client-id: client1
+            client-secret: secret1
+            authorization-grant-type: authorization_code
+            redirect-uri: "http://127.0.0.1:8080/authorized"
+            scope: product.read
+            client-name: product-client-authorization-code

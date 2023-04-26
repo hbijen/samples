@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+    <head>
+        <title>Spring Security OAuth 2.0 Sample</title>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    </head>
+    <body>
+        <div class="container">
+            <p>Name: <span th:text="${#authentication.name}"></span></p>
+        </div>
+        <div class="container">
+            <div th:if="${error}" class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 th:text="${error}" class="text-center"></h4>
+            </div>
+            <div class="panel panel-default">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <a th:href="@{/get-public}"><span style="font-size:medium">Get Public Data</span></a>
+                    </li>
+                    <li class="list-group-item">
+                        <a th:href="@{/get-products}"><span style="font-size:medium">Get Product Data</span></a>
+                    </li>
+                    <li class="list-group-item">
+                        <a th:href="@{/secure-products}"><span style="font-size:medium">Get Product Data (Employee Role access)</span></a>
+                    </li>
+                    <li class="list-group-item">
+                        <a th:href="@{/get-sales}"><span style="font-size:medium">Get Sales Data (scope not provided)</span></a>
+                    </li>
+                </ul>
+                <div th:if="${items}" class="panel-footer">
+                    <h4 th:text="${title}">Items:</h4>
+                    <table class="table table-condensed">
+                        <tbody>
+                            <tr class="row" th:each="item : ${items}">
+                                <td th:text="${item}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

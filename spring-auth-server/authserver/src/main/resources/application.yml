@@ -1,0 +1,24 @@
+server:
+  port: 9000
+
+logging:
+  level:
+    root: INFO
+    org:
+      springframework:
+        security: DEBUG
+
+
+app:
+  auth:
+    loginUrl: http://localhost:9000/auth/login
+    issuer: http://localhost:9000
+    token:
+      accessTokenTTL: 10 # value in days
+      refreshTokenTTL: 10 # value in days
+
+spring:
+  jpa:
+    hibernate:
+      # do not auto-create the table in DB
+      ddl-auto: none
