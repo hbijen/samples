@@ -18,7 +18,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
@@ -43,7 +42,10 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Configuration
+@Slf4j
 public class AuthorizationServerConfig {
 	
     @Autowired
@@ -83,12 +85,11 @@ public class AuthorizationServerConfig {
             .exceptionHandling((exceptions) -> 
                 exceptions.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")))
             // Accept access tokens for User Info and/or Client Registration
-            .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
-		//http.apply(new FederatedIdentityConfigurer());
-        // @formatter:on
+            .oauth2ResourceServer()
+            .jwt();
+
         return http.build();
     }
-
 
     /**
      * @Import(OAuth2AuthorizationServerConfiguration.class) could be used instead of creating this bean
@@ -110,8 +111,11 @@ public class AuthorizationServerConfig {
     @Bean
     OAuth2TokenCustomizer<JwtEncodingContext> jwtCustomizer() {
         return context -> {
+            
             if (context.getTokenType() == OAuth2TokenType.ACCESS_TOKEN) {
+
                 Authentication principal = context.getPrincipal();
+                log.debug("OAuth2TokenCustomizer: " + principal.getPrincipal() + ": " + principal.getAuthorities());
                 Set<String> authorities = principal.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority)
                         .collect(Collectors.toSet());
@@ -121,11 +125,11 @@ public class AuthorizationServerConfig {
     }
 
     /// Methods for signing the token 
-
     @Bean
     public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
         return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
-    }  
+    }
+
     @Bean
     public JWKSource<SecurityContext> jwkSource() throws NoSuchAlgorithmException {
         RSAKey rsaKey = generateRsa();

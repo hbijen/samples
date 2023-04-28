@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <link href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet" crossorigin="anonymous"/>
+</head>
+<body>
+    <div class="container">
+        <form class="form-signin" method="post" th:action="@{/auth/register}" th:object="${signupModel}">
+
+            <h2 class="form-signin-heading">Sign Up</h2>
+
+            <input type="hidden" id="registerWith" name="registerWith" class="form-control" th:value="${signupModel.registerWith}">
+            <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}">
+            </div>
+        
+            <div th:if="${signupModel.registerWith.name() == 'email'}">
+                <p>
+                    <input type="text" id="email" name="email" class="form-control" placeholder="E-mail" th:value="${signupModel.email}" required autofocus>
+                    <div class="small text-right text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                </p>
+                <p>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Password" th:value="${signupModel.password}" required minlength="6">
+                    <div class="small text-right text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                </p>
+                <p>
+                    <input type="password" id="repassword" name="repassword" class="form-control" placeholder="Re-enter Password" th:value="${signupModel.repassword}" required minlength="6">
+                    <div class="small text-right text-danger" th:if="${#fields.hasErrors('repassword')}" th:errors="*{repassword}"></div>
+                </p>
+            </div>
+
+            <p th:if="${signupModel.registerWith.name() == 'sms'}">
+                <input type="text" id="phone" name="phone" class="form-control" placeholder="Mobile" th:value="${signupModel.phone}" required autofocus>
+                <div class="small text-right text-danger" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
+            </p>
+
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Next</button>
+            <p class="text-right mt-2">Try other login? <a class th:href="@{/auth/login}">Back</a></p>
+        </form>
+    </div>
+</body>
+</html>

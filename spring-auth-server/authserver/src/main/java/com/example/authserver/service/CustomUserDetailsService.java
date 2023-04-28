@@ -10,7 +10,19 @@ import com.example.authserver.entity.AppUser;
 import com.example.authserver.model.AppUserDetails;
 import com.example.authserver.repository.AppUserRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * Implements spring interfaces to allows read/write to custom user table
+ * A bean need not be created in the config file, as the @Service annotation creates an instance
+ *
+ * FIXME:
+ * 1. Update AppUser, AppUserRepository to match the table structure in the mysql db
+ * 2. Or replace with the appropriate api to read/write the user
+ * 
+ */
 @Service
+@Slf4j
 public class CustomUserDetailsService implements UserDetailsManager {
     
 	@Autowired
@@ -19,7 +31,8 @@ public class CustomUserDetailsService implements UserDetailsManager {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        //TODO: Replace with the appropriate api to load the user!
+        log.info("CustomUserDetailsService " + username, new Throwable());
+
         AppUser appUser = appUserRepo.findByEmail(username);
         if (appUser == null) {
             throw new UsernameNotFoundException("User not found");
@@ -55,10 +68,5 @@ public class CustomUserDetailsService implements UserDetailsManager {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'userExists'");
     }
-
-    // public static void main() {
-    //     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    //     System.out.println("password:  " + passwordEncoder.encode("password"));
-    // }
 
 }

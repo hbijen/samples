@@ -9,7 +9,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.authserver.entity.AppUser;
 
-
+/**
+ * Provides a custom implementation of spring security UserDetails object
+ */
 public class AppUserDetails implements UserDetails {
 
     private AppUser appUser;

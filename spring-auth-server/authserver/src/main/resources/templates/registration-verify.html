@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <link href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet" crossorigin="anonymous"/>
+</head>
+<body>
+    <div class="container">
+        <form class="form-signin" method="post" th:action="@{/auth/register-confirm}" th:object="${signupModel}">
+            <input type="hidden" id="registerWith" name="registerWith" th:value="${signupModel.registerWith}">
+            <input type="hidden" id="email" name="email" th:value="${signupModel.email}">
+            <input type="hidden" id="phone" name="phone" th:value="${signupModel.phone}">
+            <h2 class="form-signin-heading">Verification Code</h2>
+            <p th:if="${code_sent}" class="alert alert-success" role="alert">
+                Verification code sent.
+            </p>
+
+            <p>
+                <div th:if="${signupModel.registerWith.name() == 'email'}">
+                    Please enter the code received in your email.
+                </div>
+                <div th:if="${signupModel.registerWith.name() == 'sms'}">
+                    Please enter the code received in your mobile.
+                </div>
+            </p>
+
+            <p>
+                <input type="text" id="verifyCode" name="verifyCode" class="form-control" placeholder="Verify Code" autofocus>
+                <div th:if="${error}" class="small text-right text-danger" role="alert" th:text="${error}"></div>
+            </p>
+
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Verify</button>
+            <p class="text-right mt-2">
+                <button class="btn btn-link btn-primary" type="submit" th:formaction="@{/auth/resend-code}">Resend Code</button>
+            </p>
+        </form>
+    </div>
+</body>
+</html>

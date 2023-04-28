@@ -8,17 +8,60 @@ logging:
       springframework:
         security: DEBUG
 
-
 app:
   auth:
-    loginUrl: http://localhost:9000/auth/login
+    #loginUrl: http://localhost:9000/auth/login
     issuer: http://localhost:9000
     token:
       accessTokenTTL: 10 # value in days
       refreshTokenTTL: 10 # value in days
 
 spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google-idp:
+            provider: google
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope: openid, https://www.googleapis.com/auth/userinfo.email
+            client-name: Sign in with Google
+            redirect-uri:
+              - "{baseUrl}/login/oauth2/code/{registrationId}"
+        provider:
+          google:
+            user-name-attribute: email
+  datasource:
+    url: ${DATASOURCE_URL}
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
+    hikari:
+      data-source-properties:
+        useSSL: false
   jpa:
     hibernate:
-      # do not auto-create the table in DB
       ddl-auto: none
+  mail:
+    host: ${SMTP_HOST}
+    port: ${SMTP_PORT}
+    username: ${SMTP_USER}
+    password: ${SMTP_PASSWORD} #set in env variable
+    properties:
+      mail: 
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  # cache is used to retain the otp sent for verifying email or sms for a duration of 10minutes
+  cache:
+    type: caffeine
+    cache-names: otp
+    caffeine:
+      spec: expireAfterWrite=10m
+
+twilio:
+  enabled: true
+  account: ${TWILIO_ACCOUNT_SID}
+  token: ${TWILIO_AUTH_TOKEN}
+  phone: ${TWILIO_PHONE} #+16073605030
