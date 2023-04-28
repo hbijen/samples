@@ -1,4 +1,4 @@
--- Ref: "org/springframework/security/oauth2/server/authorization/oauth2-authorization-schema.sql")
+-- Ref: spring-security-oauth2-authorization-server.jar!org/springframework/security/oauth2/server/authorization/oauth2-authorization-schema.sql
 CREATE TABLE oauth2_authorization (
     id varchar(100) NOT NULL,
     registered_client_id varchar(100) NOT NULL,
