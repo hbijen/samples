@@ -115,7 +115,7 @@ public class AuthorizationServerConfig {
             if (context.getTokenType() == OAuth2TokenType.ACCESS_TOKEN) {
 
                 Authentication principal = context.getPrincipal();
-                log.debug("OAuth2TokenCustomizer: " + principal.getPrincipal() + ": " + principal.getAuthorities());
+                log.info("OAuth2TokenCustomizer: " + principal.getPrincipal() + ": " + principal.getAuthorities());
                 Set<String> authorities = principal.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority)
                         .collect(Collectors.toSet());

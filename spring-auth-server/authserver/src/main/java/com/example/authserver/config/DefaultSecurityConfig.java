@@ -29,12 +29,12 @@ public class DefaultSecurityConfig {
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorizeRequests ->
             authorizeRequests
-            .requestMatchers("/static/**", "/auth/**").permitAll()
+            .requestMatchers("/static/**", "/login", "/register/**").permitAll()
             .anyRequest().authenticated());
 
         // for standard user name password login
         http.formLogin()
-            .loginPage("/auth/login")
+            .loginPage("/login")
             .permitAll();
 
         // for google login
@@ -42,7 +42,7 @@ public class DefaultSecurityConfig {
                 .userInfoEndpoint()
                     .oidcUserService(customOidcUserService())
                     .and()
-                .loginPage("/auth/login")
+                .loginPage("/login")
             )
             .oauth2Client();
         return http.build();

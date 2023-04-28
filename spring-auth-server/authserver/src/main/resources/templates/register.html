@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class="container">
-        <form class="form-signin" method="post" th:action="@{/auth/register}" th:object="${signupModel}">
+        <form class="form-signin" method="post" th:action="@{/register}" th:object="${signupModel}">
 
             <h2 class="form-signin-heading">Sign Up</h2>
 
@@ -38,7 +38,7 @@
             </p>
 
             <button class="btn btn-lg btn-primary btn-block" type="submit">Next</button>
-            <p class="text-right mt-2">Try other login? <a class th:href="@{/auth/login}">Back</a></p>
+            <p class="text-right mt-2">Try other login? <a class th:href="@{/login}">Back</a></p>
         </form>
     </div>
 </body>

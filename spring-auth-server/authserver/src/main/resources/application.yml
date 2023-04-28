@@ -4,13 +4,10 @@ server:
 logging:
   level:
     root: INFO
-    org:
-      springframework:
-        security: DEBUG
+    org.springframework.security: TRACE
 
 app:
   auth:
-    #loginUrl: http://localhost:9000/auth/login
     issuer: http://localhost:9000
     token:
       accessTokenTTL: 10 # value in days

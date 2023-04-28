@@ -9,7 +9,7 @@
 </head>
 <body>
 <div class="container">
-    <form class="form-signin" method="post" th:action="@{/auth/login}">
+    <form class="form-signin" method="post" th:action="@{/login}">
         <h2 class="form-signin-heading">Sign In</h2>
 
         <p th:if="${param.error}" class="alert alert-danger" role="alert">
@@ -28,13 +28,13 @@
             <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
         </p>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-        <p class="text-right mt-2">Not a member? <a class href="/auth/register-with-email">Register</a></p>
+        <p class="text-right mt-2">Not a member? <a class href="/register/with-email">Register</a></p>
         <p class="small text-center mt-4 mb-4">OR</p>
         <a class="btn btn-light btn-block bg-white" href="/oauth2/authorization/google-idp" role="link" style="text-transform: none;">
             <img width="20" style="margin-right: 5px;" alt="Sign in with Google" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
             Sign in with Google
         </a>
-        <a class="btn btn-light btn-block bg-white" href="/auth/register-with-phoneno" role="link" style="text-transform: none;">
+        <a class="btn btn-light btn-block bg-white" href="/register/with-phoneno" role="link" style="text-transform: none;">
             Sign in with Otp
         </a>
     </form>

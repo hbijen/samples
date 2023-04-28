@@ -31,8 +31,6 @@ public class CustomUserDetailsService implements UserDetailsManager {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        log.info("CustomUserDetailsService " + username, new Throwable());
-
         AppUser appUser = appUserRepo.findByEmail(username);
         if (appUser == null) {
             throw new UsernameNotFoundException("User not found");

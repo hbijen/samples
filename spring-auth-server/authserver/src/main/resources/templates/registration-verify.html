@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class="container">
-        <form class="form-signin" method="post" th:action="@{/auth/register-confirm}" th:object="${signupModel}">
+        <form class="form-signin" method="post" th:action="@{/register/confirm}" th:object="${signupModel}">
             <input type="hidden" id="registerWith" name="registerWith" th:value="${signupModel.registerWith}">
             <input type="hidden" id="email" name="email" th:value="${signupModel.email}">
             <input type="hidden" id="phone" name="phone" th:value="${signupModel.phone}">
@@ -34,7 +34,7 @@
 
             <button class="btn btn-lg btn-primary btn-block" type="submit">Verify</button>
             <p class="text-right mt-2">
-                <button class="btn btn-link btn-primary" type="submit" th:formaction="@{/auth/resend-code}">Resend Code</button>
+                <button class="btn btn-link btn-primary" type="submit" th:formaction="@{/register/resend-code}">Resend Code</button>
             </p>
         </form>
     </div>

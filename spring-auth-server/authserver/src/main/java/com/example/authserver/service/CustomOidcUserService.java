@@ -33,12 +33,9 @@ public class CustomOidcUserService extends OidcUserService {
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
         DefaultOidcUser oidcUser  = (DefaultOidcUser)super.loadUser(userRequest);
 
-        log.info("CustomOidcUserService attr: " + oidcUser.getAttributes());
-        log.info("CustomOidcUserService getUserInfo: " + oidcUser.getUserInfo());
+        log.debug("CustomOidcUserService getName: " + oidcUser.getName());
+        log.debug("CustomOidcUserService getUserInfo: " + oidcUser.getUserInfo());
         log.info("CustomOidcUserService getUserInfo: " + oidcUser.getAuthorities());
-        log.info("CustomOidcUserService getName: " + oidcUser.getName());
-        log.info("CustomOidcUserService getName: " + oidcUser.getIdToken());
-        log.info("CustomOidcUserService trace: ", new Throwable());
 
         String email = oidcUser.getEmail();
         AppUserDetails userDetails = null;
