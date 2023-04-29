@@ -5,13 +5,26 @@ logging:
   level:
     root: INFO
     org.springframework.security: TRACE
-
+    org.springframework.jdbc.core.JdbcTemplate: DEBUG
+    org.springframework.jdbc.core.StatementCreatorUtils: TRACE
+# custom properties defined for this app
 app:
   auth:
     issuer: http://localhost:9000
     token:
       accessTokenTTL: 10 # value in days
       refreshTokenTTL: 10 # value in days
+  client: # add all the clients that needs to access this authorization server
+    keys: client01
+    registration:
+      client01:
+        client-id: client1
+        client-secret: "{noop}secret1"
+        client-name: client one
+        client-authentication-methods: client_secret_basic
+        authorization-grant-types: authorization_code,refresh_token,client_credentials
+        redirect-uris: http://127.0.0.1:8080/login/oauth2/code/product-client-oidc,http://127.0.0.1:8080/authorized
+        scopes: openid,profile,product.read
 
 spring:
   security:

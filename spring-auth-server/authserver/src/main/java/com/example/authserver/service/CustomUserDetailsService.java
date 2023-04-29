@@ -10,8 +10,6 @@ import com.example.authserver.entity.AppUser;
 import com.example.authserver.model.AppUserDetails;
 import com.example.authserver.repository.AppUserRepository;
 
-import lombok.extern.slf4j.Slf4j;
-
 /**
  * Implements spring interfaces to allows read/write to custom user table
  * A bean need not be created in the config file, as the @Service annotation creates an instance
@@ -22,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
  * 
  */
 @Service
-@Slf4j
 public class CustomUserDetailsService implements UserDetailsManager {
     
 	@Autowired

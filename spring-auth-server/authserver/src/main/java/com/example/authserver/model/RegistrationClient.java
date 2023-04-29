@@ -29,7 +29,7 @@ public class RegistrationClient {
 			final String prefixKey = String.format("app.client.registration.%s.", d);
 			System.out.println("client name " + env.getProperty(prefixKey+"client-name"));
 			client.setClientId(env.getProperty(prefixKey+"client-id"));
-			client.setClientName(env.getProperty(prefixKey+"client-secret"));
+			client.setClientSecret(env.getProperty(prefixKey+"client-secret"));
 			client.setClientName(env.getProperty(prefixKey+"client-name"));
 			client.setClientAuthenticationMethods(asList(env.getProperty(prefixKey+"client-authentication-methods")));
 			client.setAuthorizationGrantTypes(asList(env.getProperty(prefixKey+"authorization-grant-types")));
